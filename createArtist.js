@@ -37,10 +37,26 @@ const rl = readline.createInterface({
 rl.question('Artist name? ', (artist_name) => {
     rl.close();
     // Create the artist
-    db.artist.create({
-        name: artist_name
-        })
-        .then(newAlbum => {
-            console.log(`New artist with ${newAlbum.album_name}, with id ${newAlbum.id} has been created.`)
-        })
+    db.artist.findOrCreate({
+        where:
+            {
+            name: artist_name
+            }
+    })
+    .spread(function(artistResult, created) {
+        console.log(artistResult.get({
+            plain: true
+        }))
+        if (created) {
+            console.log('New Artist was added to database')
+        } else {
+            console.log('Artist already exists')
+        }
+    })
+    // db.artist.create({
+    //     name: artist_name
+    //     })
+    //     .then(newAlbum => {
+    //         console.log(`New artist with ${newAlbum.album_name}, with id ${newAlbum.id} has been created.`)
+    //     })
 })

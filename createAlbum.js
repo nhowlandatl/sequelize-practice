@@ -36,14 +36,27 @@ rl.question('Album name? ', (name) => {
         rl.question('Please enter artist ID ', (id) => {
             rl.close();
             // Create the album
-            db.album.create({
-                artist_id: id,
-                album_name: name,
-                album_year: year
+            db.album.findOrCreate({
+                where:
+                    {
+                    artist_id: id,
+                    album_name: name,
+                    album_year: year
+                    }
             })
-            .then(newAlbum => {
-                console.log(`New artist with ${newAlbum.album_name}, with id ${newAlbum.id} has been created.`)
+            .spread(function(albumResult, created) {
+                console.log(albumResult.get({
+                    plain: true
+                }))
+                if (created) {
+                    console.log('New album was added to database')
+                } else {
+                    console.log('Album already exists')
+                }
             })
+            // .then(newAlbum => {
+            //     console.log(`New artist with ${newAlbum.album_name}, with id ${newAlbum.id} has been created.`)
+            // })
         })
     })
  })

@@ -40,13 +40,31 @@ const rl = readline.createInterface({
 rl.question('Track name? ', (name) => {
     rl.question('Album ID? ', (id) => {
         rl.close();
-        // Create the album
-        db.track.create({
-            song: name,
-            album_id: id
+        // Create the track
+        db.track.findOrCreate({
+            where:
+                {
+                song: name,
+                album_id: id
+                }
         })
+        // .spread(function(trackResult, created) {
+        //     console.log(trackResult.get({
+        //         plain: true
+        //     }))
+        //     if (created) {
+        //         console.log('New track was added to database')
+        //     } else {
+        //         console.log('Track already exists')
+        //     }
+        // })
+        // Create the track
+        // db.track.create({
+        //     song: name,
+        //     album_id: id
+        // })
         .then(newTrack => {
-            console.log(`New Track with ${newTrack.song}, with id ${newTrack.id} has been created.`)
+            console.log(`New Track "${newTrack.song}", with id ${newTrack.id} has been created.`)
         })
     })
 })
